@@ -23,11 +23,11 @@
 <body class="hold-transition login-page">
 <div class="login-box" id="rrapp" v-cloak>
   <div class="login-logo">
-    <b>人人权限系统</b>
+    <b>图书管理系统</b>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
-      <p class="login-box-msg">管理员登录</p>
+      <p class="login-box-msg">用户登录</p>
       <div v-if="error" class="alert alert-danger alert-dismissible">
         <h4 style="margin-bottom: 0px;"><i class="fa fa-exclamation-triangle"></i> {{errorMsg}}</h4>
       </div>
@@ -55,24 +55,84 @@
           </div>
         </div>
         <!-- /.col -->
-        <div class="col-xs-4">
+
+
+              <button type="button" class="btn btn-primary btn-block btn-flat" @click="registered()">注册</button>
+
+
           <button type="button" class="btn btn-primary btn-block btn-flat" @click="login">登录</button>
-        </div>
+
         <!-- /.col -->
       </div>
     <!-- /.social-auth-links -->
 
   </div>
+
+
+
+    <!-- 注册 -->
+    <div id="registered" style="display: none;">
+        <form id="ajaxForm" class="form-horizontal" style="width:100%">
+            <div class="form-group">
+
+                <div class="form-group">
+                    <div class="col-sm-2 control-label"><span class="text-red">用户名</span></div>
+                    <div class="col-sm-4">
+                        <input type="text" v-model="user.username" class="form-control" required="required" name="projectName" placeholder="用户名"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label"><span class="text-red">密码</span></div>
+                    <div class="col-sm-4">
+                        <input type="text" v-model="user.password" class="form-control" required="required" name="projectName" placeholder="密码"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2 control-label"><span class="text-red">邮箱</span></div>
+                    <div class="col-sm-4">
+                        <input type="text" v-model="user.email" class="form-control" required="required" name="projectName" placeholder="邮箱"/>
+                    </div>
+
+                </div>
+                <div class="form-group" >
+                    <div class="col-sm-2 control-label"><span class="text-red">手机号</span></div>
+                    <div class="col-sm-4">
+                        <input type="text" v-model="user.mobile" class="form-control" required="required" name="projectName" placeholder="手机号"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">状态</div>
+                    <label class="radio-inline">
+                        <input type="radio" name="status" value="0" v-model="user.status"/> 禁用
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="status" value="1" v-model="user.status"/> 正常
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+
+
   <!-- /.login-box-body -->
 </div>
 <!-- /.login-box -->
 <script src="${request.contextPath}/statics/libs/jquery.min.js"></script>
+<script src="${request.contextPath}/statics/plugins/layer/layer.js"></script>
 <script src="${request.contextPath}/statics/libs/vue.min.js"></script>
 <script src="${request.contextPath}/statics/libs/bootstrap.min.js"></script>
 <script src="${request.contextPath}/statics/libs/jquery.slimscroll.min.js"></script>
 <script src="${request.contextPath}/statics/libs/fastclick.min.js"></script>
 <script src="${request.contextPath}/statics/libs/app.js"></script>
+<!--<script src="${request.contextPath}/statics/js/modules/sys/register.js?_${.now?long}"></script>-->
 <script type="text/javascript">
+
+    var token;
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
@@ -80,6 +140,7 @@ var vm = new Vue({
 		password: '',
 		captcha: '',
 		error: false,
+        user:{},//用户
 		errorMsg: '',
 		src: 'captcha.jpg'
 	},
@@ -88,6 +149,7 @@ var vm = new Vue({
 			top.location.href = self.location.href;
 		}
 	},
+
 	methods: {
 		refreshCode: function(){
 			this.src = "captcha.jpg?t=" + $.now();
@@ -110,7 +172,48 @@ var vm = new Vue({
 					}
 				}
 			});
-		}
+		},
+        registered: function () {
+            layer.open({
+                type: 1,
+                offset: '50px',
+                skin: 'layui-layer-molv',
+                title: "学生注册",
+                area: ['1200px', '600px'],
+                shade: 0.2,
+                shadeClose: false,
+                content: jQuery("#registered"),
+                btn: ['注册', '取消'],
+                btn1: function (index) {
+                    // 进行校验
+                    // if (!$("#ajaxForm").valid()) {
+                    //     return;
+                    // }
+                    $.ajax({
+                        type: "POST",
+                        url: "sys/user/register",
+                        contentType: "application/json",
+                        data: JSON.stringify(vm.user),
+                        success: function (r) {
+                            if (r.code == 0) {
+                                alert('操作成功', function (index) {
+                                    $("#jqGrid").trigger("reloadGrid");
+                                });
+                            } else {
+                                alert("注册成功");
+                            }
+                        }
+                    });
+                },
+            });
+
+        },
+
+        created: function () {
+
+
+        }
+
 	}
 });
 </script>

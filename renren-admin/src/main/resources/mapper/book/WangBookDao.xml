@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.book.dao.WangBookDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.book.entity.WangBookEntity" id="wangBookMap">
+        <result property="bookId" column="book_id"/>
+        <result property="bookName" column="book_name"/>
+        <result property="bookDelete" column="book_delete"/>
+        <result property="bookMark" column="book_mark"/>
+        <result property="beDelete" column="be_delete"/>
+    </resultMap>
+
+
+</mapper>

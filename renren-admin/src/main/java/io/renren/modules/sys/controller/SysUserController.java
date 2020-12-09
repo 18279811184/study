@@ -25,6 +25,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,36 @@ public class SysUserController extends AbstractController {
 		PageUtils page = sysUserService.queryPage(params);
 
 		return R.ok().put("page", page);
+	}
+
+	/**
+	 * 注册用户
+	 */
+	@RequestMapping("/register")
+	public R register(@RequestBody SysUserEntity user) {
+       /* try {
+            user.setPassword(DESUtils.decryption(user.getPassword(), "12345678"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+		System.out.println(1);
+		user.setStatus(1);
+		SysUserEntity u = new SysUserEntity();
+		u.setUsername(user.getUsername());
+		ValidatorUtils.validateEntity(user, AddGroup.class);
+
+		sysUserService.saveUser(user);
+
+
+
+
+//		if("1".equals(user.getUserType().toString())) {
+//			return R.ok(1, "操作成功，船公司用户注册后,需进行信息备案!");
+//		}
+//		if("2".equals(user.getUserType().toString())) {
+//			return R.ok(2, "操作成功，拖车公司用户注册后，需进行信息备案！");
+//		}
+		return R.ok();
 	}
 	
 	/**
